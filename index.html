@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  :root {
+    --bg: #2b2b2b;
+    --panel: #3a3a3a;
+    --text: #e0e0e0;
+    --text-dim: #999;
+    --accent: #2680EB;
+    --border: #555;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Adobe Clean", -apple-system, sans-serif; font-size: 12px; color: var(--text); background: var(--bg); padding: 12px; }
+  h2 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .info { background: var(--panel); border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+  .info .label { color: var(--text-dim); font-size: 11px; }
+  .info .value { font-weight: 600; }
+  .empty { color: var(--text-dim); text-align: center; padding: 30px 0; }
+  .layer-list { max-height: 260px; overflow-y: auto; margin-bottom: 10px; }
+  .group-header { display: flex; align-items: center; padding: 5px 6px; background: var(--panel); border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
+  .group-header input { margin-right: 6px; }
+  .group-header .name { flex: 1; }
+  .group-header .size { color: var(--text-dim); font-size: 10px; }
+  .layer-item { display: flex; align-items: center; padding: 4px 6px 4px 22px; border-radius: 5px; cursor: pointer; }
+  .layer-item:hover { background: var(--panel); }
+  .layer-item input { margin-right: 6px; }
+  .layer-item .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .layer-item .type { color: var(--text-dim); font-size: 10px; margin-left: 6px; }
+  .layer-item.is-hidden .name { color: var(--text-dim); }
+  .hidden-badge { color: var(--text-dim); font-size: 10px; margin-left: 6px; }
+  .controls { display: flex; gap: 6px; align-items: center; margin-bottom: 10px; }
+  .controls label { font-size: 11px; color: var(--text-dim); }
+  .controls select { padding: 3px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; background: var(--panel); color: var(--text); }
+  .btn { width: 100%; padding: 8px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); margin-bottom: 6px; font-size: 11px; padding: 5px; }
+  .mode-switch { display: flex; gap: 6px; margin-bottom: 8px; }
+  .mode-btn { flex: 1; padding: 6px; border: 1px solid var(--border); background: transparent; border-radius: 5px; color: var(--text); font-size: 11px; cursor: pointer; }
+  .mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .mode-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .progress { margin-top: 10px; }
+  .progress-bar { height: 3px; background: #555; border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width .2s; width: 0%; }
+  .progress-text { font-size: 10px; color: var(--text-dim); margin-top: 3px; text-align: center; }
+</style>
+</head>
+<body>
+  <h2>Canvas Exporter</h2>
+
+  <div id="no-doc" class="empty">请打开一个 PSD 文档</div>
+
+  <div id="panel" style="display:none">
+    <div class="info">
+      <div><span class="label">文档：</span><span class="value" id="doc-name"></span></div>
+      <div><span class="label">尺寸：</span><span class="value" id="doc-size"></span></div>
+      <div><span class="label">图层：</span><span class="value" id="layer-count"></span></div>
+      <div><span class="label">切片：</span><span class="value" id="slice-count"></span></div>
+    </div>
+
+    <button class="btn btn-outline" id="refresh-btn">刷新图层列表</button>
+    <div class="mode-switch">
+      <button class="mode-btn active" id="canvas-mode-btn">完整画布</button>
+      <button class="mode-btn" id="slice-mode-btn">按切片</button>
+    </div>
+    <button class="btn btn-outline" id="toggle-all">全选 / 取消全选</button>
+
+    <div class="layer-list" id="layer-list"></div>
+
+    <div class="controls">
+      <label>导出倍率：</label>
+      <select id="scale">
+        <option value="1">1x</option>
+        <option value="2">2x</option>
+        <option value="3">3x</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" id="export-btn">选择文件夹并导出</button>
+
+    <div class="progress" id="progress" style="display:none">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-text" id="progress-text"></div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

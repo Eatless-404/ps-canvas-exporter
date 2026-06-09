@@ -1,0 +1,40 @@
+{
+  "id": "com.canvasexporter.ps",
+  "name": "Canvas Exporter",
+  "version": "1.0.0",
+  "manifestVersion": 5,
+  "main": "index.html",
+  "host": [
+    {
+      "app": "PS",
+      "minVersion": "24.0.0"
+    }
+  ],
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "mainPanel",
+      "label": {
+        "default": "Canvas Exporter"
+      },
+      "minimumSize": { "width": 280, "height": 400 },
+      "maximumSize": { "width": 500, "height": 800 },
+      "preferredDockedSize": { "width": 320, "height": 500 },
+      "preferredFloatingSize": { "width": 320, "height": 500 }
+    }
+  ],
+  "requiredPermissions": {
+    "localFileSystem": "fullAccess",
+    "launchProcess": {
+      "schemes": [],
+      "extensions": []
+    },
+    "network": {
+      "domains": []
+    },
+    "allowCodeGenerationFromStrings": true
+  },
+  "icons": [
+    { "width": 23, "height": 23, "path": "icons/plugin-icon.png", "scale": [1, 2], "theme": ["darkest", "dark", "medium", "light", "lightest"] }
+  ]
+}
