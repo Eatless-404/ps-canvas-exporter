@@ -191,8 +191,8 @@ function main() {
             // 隐藏所有图层（递归）
             hideAllLayers(doc.layers);
 
-            // 显示目标图层及其父级链
-            showLayerWithParents(layer);
+            // 显示目标图层及其父级链；如果目标是组，只恢复组内原本可见的子图层。
+            showLayerWithParents(layer, visibilityMap);
 
             if (item.slice) {
                 exportVisibleLayerInSlice(doc, item.slice, exportFolder, exportName, scale);
@@ -677,11 +677,11 @@ function hideAllLayers(layers) {
 }
 
 // 显示目标图层及其所有父级（确保可见链完整）
-function showLayerWithParents(layer) {
+function showLayerWithParents(layer, visibilityMap) {
     layer.visible = true;
-    // 如果是组，也显示其所有子图层
+    // 如果是组，保留组内子图层原来的可见性，避免隐藏的备用层被导出。
     if (layer.typename === "LayerSet") {
-        showAllChildren(layer.layers);
+        restoreChildrenVisibility(layer.layers, visibilityMap);
     }
     // 向上遍历父级
     try {
@@ -693,12 +693,14 @@ function showLayerWithParents(layer) {
     } catch (e) {}
 }
 
-// 显示组内所有子图层
-function showAllChildren(layers) {
+// 恢复组内子图层的原始可见性
+function restoreChildrenVisibility(layers, visibilityMap) {
     for (var i = 0; i < layers.length; i++) {
-        layers[i].visible = true;
+        if (visibilityMap[layers[i].id] !== undefined) {
+            layers[i].visible = visibilityMap[layers[i].id];
+        }
         if (layers[i].typename === "LayerSet") {
-            showAllChildren(layers[i].layers);
+            restoreChildrenVisibility(layers[i].layers, visibilityMap);
         }
     }
 }

@@ -15,6 +15,44 @@ Export Photoshop layers or groups as transparent PNGs while preserving the origi
 
 Use `CanvasExporter.jsx` if you want the Photoshop menu workflow.
 
+### Installer
+
+Download the latest installers from:
+
+```text
+https://github.com/Eatless-404/ps-canvas-exporter/releases/latest
+```
+
+macOS users can install the `.pkg` file directly. Windows users can unzip the Windows installer package, then run `Install Canvas Exporter.bat` as an administrator.
+
+After installation, restart Photoshop and open:
+
+```text
+File -> Scripts -> Canvas Exporter
+```
+
+### Build Installers
+
+Build a macOS installer:
+
+```sh
+./installer/mac/build-pkg.sh 1.0.0
+```
+
+Output:
+
+```text
+dist/Canvas Exporter Installer-1.0.0.pkg
+```
+
+Windows installer assets are in:
+
+```text
+installer/windows/
+```
+
+Use `CanvasExporter.iss` with Inno Setup to build an `.exe`, or run `Install Canvas Exporter.bat` as an administrator.
+
 ### Install
 
 Copy `CanvasExporter.jsx` to Photoshop's Scripts folder.

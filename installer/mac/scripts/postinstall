@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_SOURCE="$SCRIPT_DIR/Canvas Exporter.jsx"
+SUPPORT_DIR="/Library/Application Support/Canvas Exporter"
+SUPPORT_COPY="$SUPPORT_DIR/Canvas Exporter.jsx"
+LOG_FILE="/Library/Logs/Canvas Exporter Installer.log"
+
+log() {
+  printf "%s %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOG_FILE"
+}
+
+if [ ! -f "$SCRIPT_SOURCE" ]; then
+  log "Source script not found: $SCRIPT_SOURCE"
+  exit 1
+fi
+
+mkdir -p "$SUPPORT_DIR"
+cp "$SCRIPT_SOURCE" "$SUPPORT_COPY"
+chmod 644 "$SUPPORT_COPY"
+
+find /Applications -maxdepth 3 -type d -path "*/Adobe Photoshop*/Presets/Scripts" 2>/dev/null | while IFS= read -r scripts_dir; do
+  if [ -d "$scripts_dir" ]; then
+    cp "$SUPPORT_COPY" "$scripts_dir/Canvas Exporter.jsx"
+    chmod 644 "$scripts_dir/Canvas Exporter.jsx"
+    log "Installed Canvas Exporter.jsx to $scripts_dir"
+  fi
+done
+
+if ! find /Applications -maxdepth 3 -type d -path "*/Adobe Photoshop*/Presets/Scripts" 2>/dev/null | grep -q .; then
+  log "No Photoshop Scripts folder was found under /Applications. Kept support copy at $SUPPORT_COPY"
+fi
+
+exit 0
